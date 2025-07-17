@@ -33,43 +33,43 @@ function rollDice() {
     }, 100);
 
     // After 1 second, get the actual result from server
-    setTimeout(() => {
-        fetch('/api/roll')
-            .then(response => response.json())
-            .then(data => {
-                // Stop dice animation
-                dice.classList.remove('rolling');
-                diceDots.textContent = data.diceResult;
+    setTimeout(async () => {
+        try {
+            const response = await fetch('/api/roll');
+            const data = await response.json();
 
-                // Hide rolling message
-                rollingMessage.style.display = 'none';
+            // Stop dice animation
+            dice.classList.remove('rolling');
+            diceDots.textContent = data.diceResult;
 
-                // Show prize after a short delay
-                setTimeout(() => {
-                    prizeNameEl.textContent = data.prize.name;
-                    prizeDescriptionEl.textContent = data.prize.description;
-                    prizeValueEl.textContent = `Value: ${data.prize.value} points`;
+            // Hide rolling message
+            rollingMessage.style.display = 'none';
 
-                    prizeSection.style.display = 'block';
+            // Show prize after a short delay
+            setTimeout(() => {
+                prizeNameEl.textContent = data.prize.name;
+                prizeDescriptionEl.textContent = data.prize.description;
+                prizeValueEl.textContent = `Value: ${data.prize.value} points`;
 
-                    // Scroll to prize section
-                    prizeSection.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'center'
-                    });
-                }, 300);
+                prizeSection.style.display = 'block';
 
-                // Re-enable button
-                rollBtn.disabled = false;
-                rollBtn.textContent = '🎲 Roll Again!';
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                // Re-enable button on error
-                rollBtn.disabled = false;
-                rollBtn.textContent = '🎲 Roll the Dice!';
-                dice.classList.remove('rolling');
-                rollingMessage.style.display = 'none';
-            });
+                // Scroll to prize section
+                prizeSection.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+            }, 300);
+
+            // Re-enable button
+            rollBtn.disabled = false;
+            rollBtn.textContent = '🎲 Roll Again!';
+        } catch (error) {
+            console.error('Error:', error);
+            // Re-enable button on error
+            rollBtn.disabled = false;
+            rollBtn.textContent = '🎲 Roll the Dice!';
+            dice.classList.remove('rolling');
+            rollingMessage.style.display = 'none';
+        }
     }, 1000);
 }
