@@ -38,37 +38,27 @@
         </div>
 
         <div class="dice-container">
-            <% if (diceResult) { %>
-                <div class="dice" id="dice">
-                    <span class="dice-dots">
-                        <%= diceResult %>
-                    </span>
-                </div>
-                <% } else { %>
-                    <div class="dice" style="background: #f0f0f0; color: #999;">
-                        <span class="dice-dots">?</span>
-                    </div>
-                    <% } %>
+            <div class="dice" id="dice">
+                <span class="dice-dots" id="dice-dots">?</span>
+            </div>
         </div>
 
-        <a href="/roll" class="roll-btn" onclick="rollDice()">🎲 Roll the Dice!</a>
+        <button class="roll-btn" id="roll-btn" onclick="rollDice()">🎲 Roll the Dice!</button>
 
-        <% if (prize) { %>
-            <div class="prize-section" id="prize-section">
-                <div class="prize-name">
-                    <%= prize.name %>
-                </div>
-                <div class="prize-description">
-                    <%= prize.description %>
-                </div>
-                <div class="prize-value">Value: <%= prize.value %> points</div>
-            </div>
-            <% } %>
+        <div class="prize-section" id="prize-section" style="display: none;">
+            <div class="prize-name" id="prize-name"></div>
+            <div class="prize-description" id="prize-description"></div>
+            <div class="prize-value" id="prize-value"></div>
+        </div>
 
-                <div class="instructions">
-                    <p>Click the button to roll the dice and win amazing prizes!</p>
-                    <p>Higher numbers = Better prizes!</p>
-                </div>
+        <div class="rolling-message" id="rolling-message" style="display: none;">
+            <p>🎲 Rolling the dice...</p>
+        </div>
+
+        <div class="instructions">
+            <p>Click the button to roll the dice and win amazing prizes!</p>
+            <p>Higher numbers = Better prizes!</p>
+        </div>
     </div>
 
     <script src="/js/dice.js"></script>

@@ -31,16 +31,14 @@ app.get('/', (req, res) => {
     });
 });
 
-app.get('/roll', (req, res) => {
+app.get('/api/roll', (req, res) => {
     // Generate random number between 1 and 6
     const diceResult = Math.floor(Math.random() * 6) + 1;
     const prize = prizes[diceResult];
 
-    res.render('index', {
-        title: 'Dice Roll Game',
+    res.json({
         diceResult: diceResult,
-        prize: prize,
-        allPrizes: prizes
+        prize: prize
     });
 });
 

@@ -1,33 +1,75 @@
 function rollDice() {
     const dice = document.getElementById('dice');
-    if (dice) {
-        dice.classList.add('rolling');
-        setTimeout(() => {
-            dice.classList.remove('rolling');
-        }, 1000);
-    }
-
-    // After the page reloads and prize section appears, scroll to it
-    setTimeout(() => {
-        const prizeSection = document.getElementById('prize-section');
-        if (prizeSection) {
-            prizeSection.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center'
-            });
-        }
-    }, 1200); // Wait a bit longer than the dice animation
-}
-
-// Also scroll to prize section when page loads if there's a prize
-document.addEventListener('DOMContentLoaded', function () {
+    const diceDots = document.getElementById('dice-dots');
+    const rollBtn = document.getElementById('roll-btn');
     const prizeSection = document.getElementById('prize-section');
-    if (prizeSection) {
-        setTimeout(() => {
-            prizeSection.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center'
+    const rollingMessage = document.getElementById('rolling-message');
+    const prizeNameEl = document.getElementById('prize-name');
+    const prizeDescriptionEl = document.getElementById('prize-description');
+    const prizeValueEl = document.getElementById('prize-value');
+
+    // Disable button during roll
+    rollBtn.disabled = true;
+    rollBtn.textContent = '🎲 Rolling...';
+
+    // Hide prize section and show rolling message
+    prizeSection.style.display = 'none';
+    rollingMessage.style.display = 'block';
+
+    // Start dice rolling animation
+    dice.classList.add('rolling');
+    diceDots.textContent = '?';
+
+    // Simulate dice rolling with changing numbers
+    let rollCount = 0;
+    const rollInterval = setInterval(() => {
+        const randomNum = Math.floor(Math.random() * 6) + 1;
+        diceDots.textContent = randomNum;
+        rollCount++;
+
+        if (rollCount >= 10) { // Stop after 10 quick changes
+            clearInterval(rollInterval);
+        }
+    }, 100);
+
+    // After 1 second, get the actual result from server
+    setTimeout(() => {
+        fetch('/api/roll')
+            .then(response => response.json())
+            .then(data => {
+                // Stop dice animation
+                dice.classList.remove('rolling');
+                diceDots.textContent = data.diceResult;
+
+                // Hide rolling message
+                rollingMessage.style.display = 'none';
+
+                // Show prize after a short delay
+                setTimeout(() => {
+                    prizeNameEl.textContent = data.prize.name;
+                    prizeDescriptionEl.textContent = data.prize.description;
+                    prizeValueEl.textContent = `Value: ${data.prize.value} points`;
+
+                    prizeSection.style.display = 'block';
+
+                    // Scroll to prize section
+                    prizeSection.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+                }, 300);
+
+                // Re-enable button
+                rollBtn.disabled = false;
+                rollBtn.textContent = '🎲 Roll Again!';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Re-enable button on error
+                rollBtn.disabled = false;
+                rollBtn.textContent = '🎲 Roll the Dice!';
+                dice.classList.remove('rolling');
+                rollingMessage.style.display = 'none';
             });
-        }, 500); // Small delay to ensure page is fully loaded
-    }
-});
+    }, 1000);
+}
