@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>
+            <%= title %>
+        </h1>
+
+        <div class="prizes-showcase">
+            <h2>🏆 Available Prizes</h2>
+            <div class="prizes-grid">
+                <% Object.keys(allPrizes).forEach(function(diceNumber) { %>
+                    <div class="prize-card">
+                        <div class="dice-number">🎲 <%= diceNumber %>
+                        </div>
+                        <div class="prize-name">
+                            <%= allPrizes[diceNumber].name %>
+                        </div>
+                        <div class="prize-description">
+                            <%= allPrizes[diceNumber].description %>
+                        </div>
+                        <div class="prize-value">
+                            <%= allPrizes[diceNumber].value %> points
+                        </div>
+                    </div>
+                    <% }); %>
+            </div>
+        </div>
+
+        <div class="dice-container">
+            <% if (diceResult) { %>
+                <div class="dice" id="dice">
+                    <span class="dice-dots">
+                        <%= diceResult %>
+                    </span>
+                </div>
+                <% } else { %>
+                    <div class="dice" style="background: #f0f0f0; color: #999;">
+                        <span class="dice-dots">?</span>
+                    </div>
+                    <% } %>
+        </div>
+
+        <a href="/roll" class="roll-btn" onclick="rollDice()">🎲 Roll the Dice!</a>
+
+        <% if (prize) { %>
+            <div class="prize-section" id="prize-section">
+                <div class="prize-name">
+                    <%= prize.name %>
+                </div>
+                <div class="prize-description">
+                    <%= prize.description %>
+                </div>
+                <div class="prize-value">Value: <%= prize.value %> points</div>
+            </div>
+            <% } %>
+
+                <div class="instructions">
+                    <p>Click the button to roll the dice and win amazing prizes!</p>
+                    <p>Higher numbers = Better prizes!</p>
+                </div>
+    </div>
+
+    <script src="/js/dice.js"></script>
+</body>
+
+</html>
